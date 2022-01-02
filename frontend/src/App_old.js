@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
-import UserList from './components/User.js'
+import AuthorList from './components/Author.js'
 
 
 class App extends React.Component {
@@ -10,17 +10,17 @@ class App extends React.Component {
    constructor(props) {
        super(props)
        this.state = {
-           'users': []
+           'authors': []
        }
    }
 
    componentDidMount() {
-    axios.get('http://127.0.0.1:8000/api/users')
+    axios.get('http://127.0.0.1:8000/api/authors')
         .then(response => {
-            const users = response.data
+            const authors = response.data
                 this.setState(
                 {
-                    'users': users
+                    'authors': authors
                 }
             )
         }).catch(error => console.log(error))
@@ -29,7 +29,7 @@ class App extends React.Component {
    render () {
        return (
            <div>
-               <UserList users={this.state.users} />
+               <AuthorList authors={this.state.authors} />
            </div>
        )
    }
