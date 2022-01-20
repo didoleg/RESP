@@ -32,4 +32,5 @@ urlpatterns = [
    path('api-auth/', include('rest_framework.urls')),
    path('api/', include(router.urls)),
    path('api/test', views.UsersAPIVIew.as_view()),
+   path('api/test/1', views.AuthorViewCreate.as_view()),
 ]
