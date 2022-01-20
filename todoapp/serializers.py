@@ -3,13 +3,13 @@ from .models import Project
 from .models import ToDO
 
 
-class ProjectModelSerializer(ModelSerializer):
+class ProjectModelSerializer(HyperlinkedIdentityField):
     class Meta:
        model = Project
        fields = '__all__'
 
 
-class ToDOModelSerializer(ModelSerializer):
+class ToDOModelSerializer(HyperlinkedIdentityField):
     class Meta:
        model = ToDO
        fields = '__all__'
