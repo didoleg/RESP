@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.renderers import JSONRenderer
 from users.models import User
-from todoapp.models import Project
+from todoapp.models import Project, ToDO
 from rest_framework.response import Response
 from users.serializers import UserModelSerializer
 from todoapp.serializers import ProjectModelSerializer, ToDOModelSerializer
@@ -56,3 +56,14 @@ class FilterProject(ListAPIView):
     def get_queryset(self):
        name = self.kwargs['name']
        return Project.objects.filter(name__contains=name)
+
+class ToDOViewSet(ModelViewSet):
+    pass
+
+
+class ToDOProject(ListAPIView):
+    serializer_class = ToDOModelSerializer
+
+    def get_queryset(self):
+       name = self.kwargs['name']
+       return ToDO.objects.filter(name__contains=name)

@@ -16,13 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from mainapp.views import UserMyViewSet, ProjectMyViewSet, FilterProject
+from mainapp.views import UserMyViewSet, ProjectMyViewSet, TodoMyViewSet, FilterProject, FilterToDo
 
 router = DefaultRouter()
 router.register('users', UserMyViewSet, basename='user')
-router.register('project', ProjectMyViewSet, basename='pro')
-
-#router.register('todo', ToDOViewSet)
+router.register('Project', ProjectMyViewSet, basename='pro')
+router.register('ToDo', ToDOViewSet, basename='todo')
 
 urlpatterns = [
    path('admin/', admin.site.urls),
@@ -30,6 +29,4 @@ urlpatterns = [
    path('', include(router.urls)),
    path('viewsets/', include(router.urls)),
    path('filter/projects/<str:name>/', FilterProject.as_view()),
-   
-   #path('update_user', UpdateUserMyViewSet.as_view()),
 ]
