@@ -5,7 +5,7 @@ from todoapp.models import Project, ToDO
 from rest_framework.response import Response
 from users.serializers import UserModelSerializer
 from todoapp.serializers import ProjectModelSerializer, ToDOModelSerializer
-from rest_framework.generics import get_object_or_404, ListAPIView, UpdateAPIView
+from rest_framework.generics import get_object_or_404, ListAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
 class ProjectLimitOffsetPagination(LimitOffsetPagination):
@@ -58,10 +58,15 @@ class FilterProject(ListAPIView):
        return Project.objects.filter(name__contains=name)
 
 class ToDOViewSet(ModelViewSet):
-    pass
+    serializer_class = ToDOModelSerializer
+    permission_classes = []
+    queryset = ToDO.objects.all()
 
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()
 
-class ToDOProject(ListAPIView):
+class FilterToDO(ListAPIView):
     serializer_class = ToDOModelSerializer
 
     def get_queryset(self):
