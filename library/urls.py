@@ -19,18 +19,19 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from users.views import UserModelViewSet
 from todoapp.views import ProjectViewSet, ToDOViewSet
-from mainapp import views
+from mainapp.views import UserMyViewSet
 
 router = DefaultRouter()
 router.register('users', UserModelViewSet)
-router.register('project', ProjectViewSet)
-router.register('todo', ToDOViewSet)
+#router.register('project', ProjectViewSet)
+#router.register('todo', ToDOViewSet)
+router.register('base', UserMyViewSet, basename='user')
 
 
 urlpatterns = [
    path('admin/', admin.site.urls),
    path('api-auth/', include('rest_framework.urls')),
-   path('api/', include(router.urls)),
-   path('api/test', views.UsersAPIVIew.as_view()),
-   path('api/test/1', views.AuthorViewCreate.as_view()),
+   path('', include(router.urls)),
+   path('viewsets/', include(router.urls)),
+   #path('update_user', UpdateUserMyViewSet.as_view()),
 ]
