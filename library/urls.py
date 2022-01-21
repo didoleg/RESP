@@ -20,11 +20,9 @@ from mainapp.views import UserMyViewSet, ProjectMyViewSet
 
 router = DefaultRouter()
 
-#router.register('project', ProjectViewSet)
-#router.register('todo', ToDOViewSet)
 router.register('users', UserMyViewSet, basename='user')
 router.register('project', ProjectMyViewSet, basename='pro')
-
+#router.register('todo', ToDOViewSet)
 
 urlpatterns = [
    path('admin/', admin.site.urls),

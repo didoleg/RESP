@@ -8,6 +8,12 @@ from todoapp.serializers import ProjectModelSerializer, ToDOModelSerializer
 from rest_framework.generics import get_object_or_404, ListAPIView, UpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
+class ProjectLimitOffsetPagination(LimitOffsetPagination):
+   default_limit = 10
+
+class ToDoLimitOffsetPagination(LimitOffsetPagination):
+   default_limit = 20
+
 class UserMyViewSet(ViewSet):
     render_classes = [JSONRenderer]
     serializer_class = UserModelSerializer
@@ -36,12 +42,17 @@ class UserMyViewSet(ViewSet):
             return Response({"message": "failed", "details": serializer.errors})
 
 
-class ProjectLimitOffsetPagination(LimitOffsetPagination):
-   default_limit = 10
-
 class ProjectMyViewSet(ModelViewSet):
     render_classes = [JSONRenderer]
     pagination_class = ProjectLimitOffsetPagination
     serializer_class = ProjectModelSerializer
     queryset = Project.objects.all()
     serializer = ProjectModelSerializer(queryset, many=True)
+
+
+    def get_queryset(self):
+       name = self.request.query_params.get('name', '')
+       projects = Project.objects.all()
+       if name:
+           projects = projects.filter(name__contains=name)
+       return projects
