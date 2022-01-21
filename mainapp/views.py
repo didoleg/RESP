@@ -1,17 +1,15 @@
-from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework.viewsets import ViewSet
 from rest_framework.renderers import JSONRenderer
 from users.models import User
 from rest_framework.response import Response
 from users.serializers import UserModelSerializer
+from todoapp.serializers import ProjectModelSerializer, ToDOModelSerializer
 from rest_framework.generics import get_object_or_404, ListAPIView, UpdateAPIView
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin
 
 class UserMyViewSet(ViewSet):
     render_classes = [JSONRenderer]
     serializer_class = UserModelSerializer
-  
     
     def list(self, request):
         users = User.objects.all()
@@ -36,3 +34,6 @@ class UserMyViewSet(ViewSet):
         else:
             return Response({"message": "failed", "details": serializer.errors})
 
+
+class ProjectMyViewSet(ViewSet):
+    render_classes = [JSONRenderer]
