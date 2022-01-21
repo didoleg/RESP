@@ -50,9 +50,9 @@ class ProjectMyViewSet(ModelViewSet):
     serializer = ProjectModelSerializer(queryset, many=True)
 
 
+class FilterProject(ListAPIView):
+    serializer_class = ProjectModelSerializer
+
     def get_queryset(self):
-       name = self.request.query_params.get('name', '')
-       projects = Project.objects.all()
-       if name:
-           projects = projects.filter(name__contains=name)
-       return projects
+       name = self.kwargs['name']
+       return Project.objects.filter(name__contains=name)
