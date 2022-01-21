@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from users.serializers import UserModelSerializer
 from todoapp.serializers import ProjectModelSerializer, ToDOModelSerializer
 from rest_framework.generics import get_object_or_404, ListAPIView, UpdateAPIView
-from rest_framework import mixins
+from rest_framework.pagination import LimitOffsetPagination
 
 class UserMyViewSet(ViewSet):
     render_classes = [JSONRenderer]
@@ -36,8 +36,12 @@ class UserMyViewSet(ViewSet):
             return Response({"message": "failed", "details": serializer.errors})
 
 
+class ProjectLimitOffsetPagination(LimitOffsetPagination):
+   default_limit = 10
+
 class ProjectMyViewSet(ModelViewSet):
     render_classes = [JSONRenderer]
+    pagination_class = ProjectLimitOffsetPagination
     serializer_class = ProjectModelSerializer
     queryset = Project.objects.all()
     serializer = ProjectModelSerializer(queryset, many=True)
