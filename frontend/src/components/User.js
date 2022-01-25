@@ -15,10 +15,10 @@ const UserItem = ({user}) => {
 const UserList = ({users}) => {
     return (
         <table>
-            <th>User name</th>
+            <th>User name (Login)</th>
             <th>First name</th>
             <th>Last Name</th>
-            <th>email</th>
+            <th>Email</th>
             {users.map((user) => <UserItem user={user} />)}
         </table>
     )
