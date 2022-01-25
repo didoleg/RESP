@@ -1,9 +1,6 @@
-import React from 'react';
-import './App.css';
-import UserList from './components/User.js';
-import MenuItemList from './components/Menu.js';
-import ShowFooter from './components/Footer.js';
-import axios from 'axios';
+import React from 'react'
+// import AuthorList from './components/Author.js'
+import UserList from './components/User.js'
 
 class App extends React.Component {
 
@@ -11,47 +8,25 @@ class App extends React.Component {
         super(props)
         this.state = {
             'users': [],
-            'menu': []
         }
     }
 
     componentDidMount() {
-
-        axios.get('http://127.0.0.1:8000/api/users/')
+        axios.get('http://localhost:8000/viewsets/users/')
             .then(response => {
                 const users = response.data;
                 this.setState({
                     'users': users,
-                    'menu': this.state.menu
                 });
             })
             .catch(error => console.log(error));
-
-        
-        this.setState({
-            'users': this.state.users,
-            'menu': [
-                {
-                    'name': 'Главная',
-                    'url': 'http://127.0.0.1:8000/api/',
-                }
-            ]
-        });
     }
 
-    render () {
+    render() {
         return (
-            <div>
-                <div>
-                    <MenuItemList menu={this.state.menu} />
-                </div>
-                <div>
-                    <UserList users={this.state.users} />
-                </div>
-                <div>
-                    <ShowFooter />
-                </div>
-            </div>
+        <div className="App">
+            <UserList items={this.state.users} />
+        </div>
         )
     }
 }
