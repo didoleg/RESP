@@ -1,59 +1,93 @@
 import React from 'react';
-import './App.css';
-import UserList from './components/User.js';
-import MenuItemList from './components/Menu.js';
-import ShowFooter from './components/Footer.js';
-import axios from 'axios';
+import {BrowserRouter, Routes, Route,} from "react-router-dom";
+import axios from 'axios'
+import './bootstrap/css/bootstrap.min.css'
+import './bootstrap/css/sticky-footer-navbar.css'
+import Footer from './components/Footer.js'
+import Navbar from './components/Menu.js'
+import UserList from './components/User.js'
+import {ProjectList, ProjectDetail} from './components/Project.js'
+import ToDoList from './components/ToDo.js'
+
+
+
+const DOMAIN = 'http://localhost:8000'
+const get_url = (url) => `${DOMAIN}${url}`
+
 
 class App extends React.Component {
-
     constructor(props) {
         super(props)
         this.state = {
-            'users': [],
-            'menu': []
+            navbarItems: [
+                {name: 'users', href: '/users'},
+                {name: 'Projects', href: '/Project'},
+                {name: 'ToDo', href: '/ToDo'},
+            ],
+            users: [],
+            projects: [],
+            project: {},
+            todos: []
         }
     }
 
-    componentDidMount() {
+    render() {
+         return (
+              <BrowserRouter>
+                  <header>
+                    <Navbar navbarItems={this.state.navbarItems} />
+                  </header>
+                  <main role="main" class="flex-shrink-0">
+                      <div className="container">
+                        <Routes>
+                            <Route exact path='/users'>
+                                <UserList users={this.state.users} />
+                            </Route>
+                            <Route exact path='/Project'>
+                                <ProjectList items={this.state.projects} />
+                            </Route>
+                            <Route exact path='/ToDo'>
+                                <ToDoList items={this.state.todos} />
+                            </Route>
+                            <Route path="/Project/:id" children={<ProjectDetail getProject={(id) => this.getProject(id)} item={this.state.project} />} />
+                        </Routes>
+                      </div>
+                  </main>
 
-        axios.get('http://127.0.0.1:8000/api/users/')
-            .then(response => {
-                const users = response.data;
-                this.setState({
-                    'users': users,
-                    'menu': this.state.menu
-                });
-            })
-            .catch(error => console.log(error));
+              <Footer />
+            </BrowserRouter>
 
-        
-        this.setState({
-            'users': this.state.users,
-            'menu': [
-                {
-                    'name': 'Главная',
-                    'url': 'http://127.0.0.1:8000/api/',
-                }
-            ]
-        });
+
+            )
     }
 
-    render () {
-        return (
-            <div>
-                <div>
-                    <MenuItemList menu={this.state.menu} />
-                </div>
-                <div>
-                    <UserList users={this.state.users} />
-                </div>
-                <div>
-                    <ShowFooter />
-                </div>
-            </div>
-        )
+    getProject(id) {
+        axios.get(get_url(`/Project/${id}`))
+        .then(response => {
+            console.log(response.data)
+            this.setState({project: response.data})
+        }).catch(error => console.log(error))
+    }
+
+
+    componentDidMount() {
+            axios.get(get_url('/users'))
+        .then(response => {
+            this.setState({users: response.data.results})
+        }).catch(error => console.log(error))
+
+        axios.get(get_url('/Project'))
+        .then(response => {
+            this.setState({projects: response.data.results})
+        }).catch(error => console.log(error))
+
+        axios.get(get_url('/ToDo'))
+        .then(response => {
+            this.setState({todos: response.data.results})
+        }).catch(error => console.log(error))
+
     }
 }
+
 
 export default App;
