@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import axios from 'axios'
 import './bootstrap/css/bootstrap.min.css'
 import './bootstrap/css/sticky-footer-navbar.css'
@@ -11,7 +11,7 @@ import ToDoList from './components/ToDo.js'
 
 
 
-const DOMAIN = 'http://localhost:8000/viewsets'
+const DOMAIN = 'http://localhost:8000'
 const get_url = (url) => `${DOMAIN}${url}`
 
 
@@ -20,9 +20,9 @@ class App extends React.Component {
         super(props)
         this.state = {
             navbarItems: [
-                {name: 'Users', href: '/users/'},
-                {name: 'Projects', href: '/Project/'},
-                {name: 'ToDo', href: '/ToDo/'},
+                {name: 'users', href: '/users'},
+                {name: 'Projects', href: '/Project'},
+                {name: 'ToDo', href: '/ToDo'},
             ],
             users: [],
             projects: [],
@@ -33,38 +33,36 @@ class App extends React.Component {
 
     render() {
          return (
-              <Router>
+              <BrowserRouter>
                   <header>
                     <Navbar navbarItems={this.state.navbarItems} />
                   </header>
                   <main role="main" class="flex-shrink-0">
                       <div className="container">
-                        <Switch>
-                            <Route exact path='/'>
+                        <Routes>
+                            <Route exact path='/users'>
                                 <UserList users={this.state.users} />
                             </Route>
-                            <Route exact path='/projects'>
+                            <Route exact path='/Project'>
                                 <ProjectList items={this.state.projects} />
                             </Route>
-                            <Route exact path='/todos'>
+                            <Route exact path='/ToDo'>
                                 <ToDoList items={this.state.todos} />
                             </Route>
-                            <Route path="/project/:id" children={<ProjectDetail getProject={(id) => this.getProject(id)} item={this.state.project} />} />
-                        </Switch>
+                            <Route path="/Project/:id" children={<ProjectDetail getProject={(id) => this.getProject(id)} item={this.state.project} />} />
+                        </Routes>
                       </div>
                   </main>
 
               <Footer />
-            </Router>
+            </BrowserRouter>
 
 
             )
     }
 
     getProject(id) {
-        console.log('call')
-        console.log(get_url(`/api/projects/${id}`))
-        axios.get(get_url(`/api/projects/${id}`))
+        axios.get(get_url(`/Project/${id}`))
         .then(response => {
             console.log(response.data)
             this.setState({project: response.data})
@@ -73,17 +71,17 @@ class App extends React.Component {
 
 
     componentDidMount() {
-            axios.get(get_url('/users/'))
+            axios.get(get_url('/users'))
         .then(response => {
             this.setState({users: response.data.results})
         }).catch(error => console.log(error))
 
-        axios.get(get_url('/Project/'))
+        axios.get(get_url('/Project'))
         .then(response => {
             this.setState({projects: response.data.results})
         }).catch(error => console.log(error))
 
-        axios.get(get_url('/ToDo/'))
+        axios.get(get_url('/ToDo'))
         .then(response => {
             this.setState({todos: response.data.results})
         }).catch(error => console.log(error))

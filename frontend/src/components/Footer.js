@@ -1,9 +1,11 @@
 import React from 'react';
 
-const ShowFooter = () => {
-    return (
-        <div>test@mail.ru</div>
-    )
+export default function Footer() {
+  return (
+    <footer className="footer mt-auto py-3">
+      <div className="container">
+        <span className="text-muted">This is Footer</span>
+      </div>
+    </footer>
+  );
 }
-
-export default ShowFooter; 
