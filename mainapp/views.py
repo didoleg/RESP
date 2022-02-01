@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.renderers import JSONRenderer
+from rest_framework import permissions
 from users.models import User
 from todoapp.models import Project, ToDO
 from rest_framework.response import Response
@@ -43,6 +44,7 @@ class UserMyViewSet(ViewSet):
 
 
 class ProjectMyViewSet(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     render_classes = [JSONRenderer]
     pagination_class = ProjectLimitOffsetPagination
     serializer_class = ProjectModelSerializer

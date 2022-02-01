@@ -23,7 +23,7 @@ from rest_framework_simplejwt.views import (
 from mainapp.views import UserMyViewSet, ProjectMyViewSet, ToDOViewSet, FilterProject, FilterToDO
 
 router = DefaultRouter()
-router.register('users', UserMyViewSet, basename='user')
+router.register('users', UserMyViewSet, basename='users')
 router.register('Project', ProjectMyViewSet, basename='pro')
 router.register('ToDo', ToDOViewSet, basename='todo')
 

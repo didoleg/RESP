@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Routes, Route,} from "react-router-dom";
+import {BrowserRouter, Switch, Route,} from "react-router-dom";
 import axios from 'axios'
 import './bootstrap/css/bootstrap.min.css'
 import './bootstrap/css/sticky-footer-navbar.css'
@@ -39,7 +39,7 @@ class App extends React.Component {
                   </header>
                   <main role="main" class="flex-shrink-0">
                       <div className="container">
-                        <Routes>
+                        <Switch>
                             <Route exact path='/users'>
                                 <UserList users={this.state.users} />
                             </Route>
@@ -50,7 +50,7 @@ class App extends React.Component {
                                 <ToDoList items={this.state.todos} />
                             </Route>
                             <Route path="/Project/:id" children={<ProjectDetail getProject={(id) => this.getProject(id)} item={this.state.project} />} />
-                        </Routes>
+                        </Switch>
                       </div>
                   </main>
 
