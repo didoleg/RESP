@@ -1,7 +1,6 @@
 import React from 'react'
-import AuthorList from './components/Author.js'
-import BookList from './components/User.js'
-import AuthorBookList from './components/AuthorBook.js'
+import UserList from './components/User.js'
+import {ProjectList, ProjectDetail} from './components/Project.js'
 import LoginForm from './components/Auth.js'
 import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom'
 import axios from 'axios'
@@ -22,8 +21,8 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      'authors': [],
-      'books': [],
+      'users': [],
+      'project': [],
       'token': ''
     }
   }
@@ -70,17 +69,17 @@ class App extends React.Component {
   load_data() {
     
     const headers = this.get_headers()
-    axios.get('http://127.0.0.1:8000/api/authors/', {headers})
+    axios.get('http://127.0.0.1:8000/api/Users/', {headers})
         .then(response => {
-            this.setState({authors: response.data})
+            this.setState({users: response.data})
         }).catch(error => console.log(error))
 
-    axios.get('http://127.0.0.1:8000/api/books/', {headers})
+    axios.get('http://127.0.0.1:8000/api/Project/', {headers})
         .then(response => {
-            this.setState({books: response.data})
+            this.setState({project: response.data})
         }).catch(error => {
           console.log(error)
-          this.setState({books: []})
+          this.setState({project: []})
         })
   }
 
@@ -95,10 +94,10 @@ class App extends React.Component {
             <nav>
               <ul>
                 <li>
-                  <Link to='/'>Authors</Link>
+                  <Link to='/'>Users</Link>
                 </li>
                 <li>
-                  <Link to='/books'>Books</Link>
+                  <Link to='/Project'>Project</Link>
                 </li>
                 <li>
                     {this.is_authenticated() ? <button onClick={()=>this.logout()}>Logout</button> : <Link to='/login'>Login</Link>}
@@ -106,13 +105,13 @@ class App extends React.Component {
               </ul>
             </nav>
             <Switch>
-              <Route exact path='/' component={() => <AuthorList items={this.state.authors} />}  />
-              <Route exact path='/books' component={() => <BookList items={this.state.books} />} />
+              <Route exact path='/' component={() => <UserList items={this.state.users} />}  />
+              <Route exact path='/Project' component={() => <ProjectList items={this.state.project} />} />
               <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
-              <Route path="/author/:id">
-                <AuthorBookList items={this.state.books} />
+              <Route path="/user/:id">
+                <ProjectDetail items={this.state.project} />
               </Route>
-              <Redirect from='/authors' to='/' />
+              <Redirect from='/users' to='/' />
               <Route component={NotFound404} />
             </Switch>
           </BrowserRouter>
