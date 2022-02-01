@@ -1,93 +1,124 @@
-import React from 'react';
-import {BrowserRouter, Switch, Route,} from "react-router-dom";
+import React from 'react'
+import AuthorList from './components/Author.js'
+import BookList from './components/User.js'
+import AuthorBookList from './components/AuthorBook.js'
+import LoginForm from './components/Auth.js'
+import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom'
 import axios from 'axios'
-import './bootstrap/css/bootstrap.min.css'
-import './bootstrap/css/sticky-footer-navbar.css'
-import Footer from './components/Footer.js'
-import Navbar from './components/Menu.js'
-import UserList from './components/User.js'
-import {ProjectList, ProjectDetail} from './components/Project.js'
-import ToDoList from './components/ToDo.js'
+import Cookies from 'universal-cookie';
 
 
-
-const DOMAIN = 'http://localhost:8000'
-const get_url = (url) => `${DOMAIN}${url}`
-
+const NotFound404 = ({ location }) => {
+  return (
+    <div>
+        <h1>Страница по адресу '{location.pathname}' не найдена</h1>
+    </div>
+  )
+}
+    
 
 class App extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            navbarItems: [
-                {name: 'users', href: '/users'},
-                {name: 'Projects', href: '/Project'},
-                {name: 'ToDo', href: '/ToDo'},
-            ],
-            users: [],
-            projects: [],
-            project: {},
-            todos: []
-        }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      'authors': [],
+      'books': [],
+      'token': ''
     }
+  }
 
-    render() {
-         return (
-              <BrowserRouter>
-                  <header>
-                    <Navbar navbarItems={this.state.navbarItems} />
-                  </header>
-                  <main role="main" class="flex-shrink-0">
-                      <div className="container">
-                        <Switch>
-                            <Route exact path='/users'>
-                                <UserList users={this.state.users} />
-                            </Route>
-                            <Route exact path='/Project'>
-                                <ProjectList items={this.state.projects} />
-                            </Route>
-                            <Route exact path='/ToDo'>
-                                <ToDoList items={this.state.todos} />
-                            </Route>
-                            <Route path="/Project/:id" children={<ProjectDetail getProject={(id) => this.getProject(id)} item={this.state.project} />} />
-                        </Switch>
-                      </div>
-                  </main>
+  set_token(token) {
+    const cookies = new Cookies()
+    cookies.set('token', token)
+    this.setState({'token': token}, ()=>this.load_data())
+  }
 
-              <Footer />
-            </BrowserRouter>
+  is_authenticated() {
+    return this.state.token != ''
+  }
 
+  logout() {
+    this.set_token('')
+  }
 
-            )
+  get_token_from_storage() {
+    const cookies = new Cookies()
+    const token = cookies.get('token')
+    this.setState({'token': token}, ()=>this.load_data())
+  }
+
+  get_token(username, password) {
+    axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username, password: password})
+    .then(response => {
+        this.set_token(response.data['token'])
+    }).catch(error => alert('Неверный логин или пароль'))
+  }
+
+  get_headers() {
+    let headers = {
+      'Content-Type': 'application/json'
     }
+  if (this.is_authenticated())
+    {
+        headers['Authorization'] = 'Token ' + this.state.token
+    }
+    return headers
+  }
 
-    getProject(id) {
-        axios.get(get_url(`/Project/${id}`))
+
+  load_data() {
+    
+    const headers = this.get_headers()
+    axios.get('http://127.0.0.1:8000/api/authors/', {headers})
         .then(response => {
-            console.log(response.data)
-            this.setState({project: response.data})
-        }).catch(error => console.log(error))
-    }
-
-
-    componentDidMount() {
-            axios.get(get_url('/users'))
-        .then(response => {
-            this.setState({users: response.data.results})
+            this.setState({authors: response.data})
         }).catch(error => console.log(error))
 
-        axios.get(get_url('/Project'))
+    axios.get('http://127.0.0.1:8000/api/books/', {headers})
         .then(response => {
-            this.setState({projects: response.data.results})
-        }).catch(error => console.log(error))
+            this.setState({books: response.data})
+        }).catch(error => {
+          console.log(error)
+          this.setState({books: []})
+        })
+  }
 
-        axios.get(get_url('/ToDo'))
-        .then(response => {
-            this.setState({todos: response.data.results})
-        }).catch(error => console.log(error))
+  componentDidMount() {
+    this.get_token_from_storage()
+  }
 
-    }
+  render() {
+    return (
+        <div className="App">
+          <BrowserRouter>
+            <nav>
+              <ul>
+                <li>
+                  <Link to='/'>Authors</Link>
+                </li>
+                <li>
+                  <Link to='/books'>Books</Link>
+                </li>
+                <li>
+                    {this.is_authenticated() ? <button onClick={()=>this.logout()}>Logout</button> : <Link to='/login'>Login</Link>}
+                </li>
+              </ul>
+            </nav>
+            <Switch>
+              <Route exact path='/' component={() => <AuthorList items={this.state.authors} />}  />
+              <Route exact path='/books' component={() => <BookList items={this.state.books} />} />
+              <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
+              <Route path="/author/:id">
+                <AuthorBookList items={this.state.books} />
+              </Route>
+              <Redirect from='/authors' to='/' />
+              <Route component={NotFound404} />
+            </Switch>
+          </BrowserRouter>
+        </div>
+    )
+  }
 }
 
-
-export default App;
+export default App

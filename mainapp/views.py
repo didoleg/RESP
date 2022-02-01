@@ -18,7 +18,8 @@ class ToDoLimitOffsetPagination(LimitOffsetPagination):
 class UserMyViewSet(ViewSet):
     render_classes = [JSONRenderer]
     serializer_class = UserModelSerializer
-    
+    queryset = User.objects.all()
+        
     def list(self, request):
         users = User.objects.all()
         serializer = UserModelSerializer(users, many=True)
