@@ -1,12 +1,8 @@
-from rest_framework import mixins, viewsets
+from rest_framework.viewsets import ModelViewSet
 from .models import User
 from .serializers import UserModelSerializer
 
 
-class UserViewSet(mixins.ListModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.CreateModelMixin,
-                  viewsets.GenericViewSet):
+class UserViewSet(ModelViewSet):
     serializer_class = UserModelSerializer
     queryset = User.objects.all()
