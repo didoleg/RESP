@@ -2,7 +2,7 @@ import json
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, force_authenticate, APIClient, APITestCase
-# from mixer.backend.django import mixer
+from mixer.backend.django import mixer
 from django.contrib.auth.models import User
 from users.models import User
 
@@ -44,8 +44,14 @@ class TestAPITestCase(APITestCase):
 
     def test_create(self):
         user = User.objects.create(uuid='356883c454a84d4088c3765817dd12d2', user_name='pupkin_spb3', first_name='Vasiy', last_name='Pupkin3', email='pupkin3@mail.ru')
-        print(user)
         response = self.client.put(f'/api/Users/{user.uuid}/', {'user_name': 'test_new_test'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(uuid=user.uuid)
 
+
+class TestMixer(APITestCase):
+    def test_edit_mixer(self):
+        user = mixer.blend(User)
+        response = self.client.put(f'/api/Users/{user.uuid}/', {'name': 'test_new2_test'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user = User.objects.get(uuid=user.uuid)
