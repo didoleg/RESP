@@ -62,7 +62,7 @@ class FilterProject(ListAPIView):
 
 class ToDOViewSet(ModelViewSet):
     serializer_class = ToDOModelSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticated]
     queryset = ToDO.objects.all()
 
     def perform_destroy(self, instance):

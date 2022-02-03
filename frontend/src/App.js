@@ -34,7 +34,7 @@ class App extends React.Component {
   }
 
   is_authenticated() {
-    return this.state.token != ''
+    return this.state.token !== ''
   }
 
   logout() {
