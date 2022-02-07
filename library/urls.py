@@ -18,6 +18,8 @@ from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from mainapp.views import UserMyViewSet, ProjectMyViewSet, ToDOViewSet, FilterProject, FilterToDO
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 router = DefaultRouter()
 router.register('Users', UserMyViewSet)
