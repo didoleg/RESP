@@ -32,4 +32,6 @@ urlpatterns = [
    path('filter/projects/<str:name>/', FilterProject.as_view()),
    path('filter/projects/<str:name>/', FilterToDO.as_view()),
    path('api-token-auth/', views.obtain_auth_token),
+   path('api/users/1', include('users.urls', namespace='1')),
+   path('api/users/2', include('users.urls', namespace='2')),
 ]
