@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'users',
     'corsheaders',
     'todoapp',
+    'mainapp',
 ]
 
 MIDDLEWARE = [
@@ -132,4 +133,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
    "http://localhost:3000",
 ]
+
+REST_FRAMEWORK = {
+   'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+   'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+   'PAGE_SIZE': 100
+}
 
