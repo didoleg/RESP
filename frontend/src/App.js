@@ -2,7 +2,7 @@ import React from 'react'
 import UserList from './components/User.js'
 import {ProjectList, ProjectDetail} from './components/Project.js'
 import LoginForm from './components/Auth.js'
-import ToDoList from './components/ToDo.js'
+import {ToDoList, ToDoDetail} from './components/ToDo.js'
 import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom'
 import axios from 'axios'
 import Cookies from 'universal-cookie';
@@ -135,11 +135,14 @@ class App extends React.Component {
             </nav>
             <Switch>
               <Route exact path='/' component={() => <UserList items={this.state.users} />}  />
+              <Route exact path='/Project/create' component={() => <ProjectForm />}  />
+              <Route exact path='/ToDo/create' component={() => <ToDoForm />}  />
               <Route exact path='/Project' component={() => <ProjectList items={this.state.project} delete_Project={(id) => this.delete_Project(id)}/>} />
               <Route exact path='/ToDo' component={() => <ToDoList items={this.state.todo} delete_ToDo={(id) => this.delete_ToDo(id)}/>} />
-              <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
+              <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />            
               <Route path="/user/:id">
                 <ProjectDetail items={this.state.project} />
+                <ToDoDetail items={this.state.todo} />
               </Route>
               <Redirect from='/users' to='/' />
               <Route component={NotFound404} />

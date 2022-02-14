@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link, useParams} from "react-router-dom";
 
 
 const ToDoListItem = ({item}) => {
@@ -14,8 +15,9 @@ const ToDoListItem = ({item}) => {
     )
 }
 
-const ToDoList = ({items}) => {
+const ToDoList = ({items, delete_ToDo}) => {
     return (
+        <div>
         <table className="table">
             <tr>
                 <th>Id</th>
@@ -26,7 +28,37 @@ const ToDoList = ({items}) => {
             </tr>
             {items.map((item) => <ToDoListItem item={item} delete_ToDo={delete_ToDo}/>)}
         </table>
+        <Link to='/ToDo/create'>Create</Link>
+        </div>
+        
     )
 }
+const ToDoTextItem = ({item}) => {
+    return (
+            <li>
+            {item.text} ({item.user_create})
+        </li>
+        )
+    }
+    
+const ToDoDetail = ({getToDo, item}) => {
+        let { id } = useParams();
+        getToDo(id)
+        let users = item.user_create ? item.user_create : []
+        console.log(id)
+        return (
+            <div>
+                <h1>{item.text}</h1>
+                Text: <a href={item.text}>{item.text}</a>
+                <p></p>
+                User create:
+                <ol>
+                {users.map((user_create) => <ToDoTextItem item={user_create} />)}
+                </ol>
+            </div>
+        )
+}
 
-export default ToDoList
+
+
+export default {ToDoList, ToDoDetail}
