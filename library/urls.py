@@ -16,18 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from mainapp.views import UserMyViewSet, ProjectMyViewSet, ToDOViewSet, FilterProject, FilterToDO
-
-router = DefaultRouter()
-router.register('users', UserMyViewSet, basename='user')
-router.register('Project', ProjectMyViewSet, basename='pro')
-router.register('ToDo', ToDOViewSet, basename='todo')
 
 urlpatterns = [
    path('admin/', admin.site.urls),
    path('api-auth/', include('rest_framework.urls')),
-   path('', include(router.urls)),
-   path('viewsets/', include(router.urls)),
-   path('filter/projects/<str:name>/', FilterProject.as_view()),
-   path('filter/projects/<str:name>/', FilterToDO.as_view()),
 ]
