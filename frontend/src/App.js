@@ -2,6 +2,7 @@ import React from 'react'
 import UserList from './components/User.js'
 import {ProjectList, ProjectDetail} from './components/Project.js'
 import LoginForm from './components/Auth.js'
+import ToDoList from './components/ToDo.js'
 import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom'
 import axios from 'axios'
 import Cookies from 'universal-cookie';
@@ -23,6 +24,7 @@ class App extends React.Component {
     this.state = {
       'users': [],
       'project': [],
+      'todo': [],
       'token': ''
     }
   }
@@ -81,10 +83,37 @@ class App extends React.Component {
           console.log(error)
           this.setState({project: []})
         })
+
+    axios.get('http://127.0.0.1:8000/api/ToDo/', {headers})
+        .then(response => {
+            this.setState({todo: response.data})
+        }).catch(error => {
+          console.log(error)
+          this.setState({project: []})
+        })
   }
 
   componentDidMount() {
     this.get_token_from_storage()
+  }
+
+
+  delete_Project(id){
+
+    const headers = this.get_headers() 
+    axios.delete(`http://127.0.0.1:8000/api/Project/${id}`, {headers, headers})
+        .then(response => {
+          this.setState({project: this.state.project.filter((item) => item.id !== id)})
+  }).catch(error => console.log(error))
+  }
+
+  delete_ToDo(id){
+
+    const headers = this.get_headers() 
+    axios.delete(`http://127.0.0.1:8000/api/ToDo/${id}`, {headers, headers})
+        .then(response => {
+          this.setState({todo: this.state.todo.filter((item) => item.id !== id)})
+  }).catch(error => console.log(error))
   }
 
   render() {
@@ -106,7 +135,8 @@ class App extends React.Component {
             </nav>
             <Switch>
               <Route exact path='/' component={() => <UserList items={this.state.users} />}  />
-              <Route exact path='/Project' component={() => <ProjectList items={this.state.project} />} />
+              <Route exact path='/Project' component={() => <ProjectList items={this.state.project} delete_Project={(id) => this.delete_Project(id)}/>} />
+              <Route exact path='/ToDo' component={() => <ToDoList items={this.state.todo} delete_ToDo={(id) => this.delete_ToDo(id)}/>} />
               <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
               <Route path="/user/:id">
                 <ProjectDetail items={this.state.project} />

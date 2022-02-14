@@ -9,6 +9,7 @@ const ProjectListItem = ({item}) => {
             <td>{item.name}</td>
             <td>{item.repository}</td>
             <td>{item.users}</td>
+            <td><button onClick={()=>delete_Project(item.id)} type='button'>Delete</button></td>
         </tr>
     )
 }
@@ -22,7 +23,7 @@ const ProjectList = ({items}) => {
                 <th>Repository</th>
                 <th>User Add</th>
             </tr>
-            {items.map((item) => <ProjectListItem item={item} />)}
+            {items.map((item) => <ProjectListItem item={item} delete_Project={delete_Project}/>)}
         </table>
     )
 }
