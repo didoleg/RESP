@@ -11,4 +11,3 @@ class User(models.Model):
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=True)
     email = models.CharField(default=uuid4, unique=True, max_length=100)
-

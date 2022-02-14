@@ -12,3 +12,4 @@ class UserViewSet(ModelViewSet):
         if self.request.version == '2':
             return UserModelSerializer_personal
         return UserModelSerializer
+
