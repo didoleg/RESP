@@ -9,6 +9,7 @@ const ToDoListItem = ({item}) => {
             <td>{item.create}</td>
             <td>{item.project}</td>
             <td>{item.user_create}</td>
+            <td><button onClick={()=>delete_ToDo(item.id)} type='button'>Delete</button></td>
         </tr>
     )
 }
@@ -23,7 +24,7 @@ const ToDoList = ({items}) => {
                 <th>Project</th>
                 <th>User creator</th>
             </tr>
-            {items.map((item) => <ToDoListItem item={item} />)}
+            {items.map((item) => <ToDoListItem item={item} delete_ToDo={delete_ToDo}/>)}
         </table>
     )
 }
