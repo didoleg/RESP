@@ -5,9 +5,13 @@ from users.models import User
 from todoapp.models import Project, ToDO
 from rest_framework.response import Response
 from users.serializers import UserModelSerializer
-from todoapp.serializers import ProjectModelSerializer, ToDOModelSerializer
-from rest_framework.generics import get_object_or_404, ListAPIView
+from todoapp.serializers import ProjectModelSerializer, ProjectReadSerializer,ToDOModelSerializer, ToDOModelSerializer_new
+from rest_framework.generics import get_object_or_404
+from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
+from .filtres import TodoFilter, FilterProject
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class ProjectLimitOffsetPagination(LimitOffsetPagination):
    default_limit = 10
@@ -53,25 +57,39 @@ class ProjectMyViewSet(ModelViewSet):
     serializer = ProjectModelSerializer(queryset, many=True)
 
 
-class FilterProject(ListAPIView):
-    serializer_class = ProjectModelSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return ProjectReadSerializer
+        return ProjectModelSerializer
 
     def get_queryset(self):
-       name = self.kwargs['name']
-       return Project.objects.filter(name__contains=name)
+        queryset = Project.objects.all()
+        name = self.request.query_params.get('name', None)
+        if name:
+            queryset = queryset.filter(name__contains=name)
+        return queryset
+
+
 
 class ToDOViewSet(ModelViewSet):
     serializer_class = ToDOModelSerializer
-    permission_classes = [permissions.IsAuthenticated]
     queryset = ToDO.objects.all()
+    pagination_class = ProjectLimitOffsetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TodoFilter
 
-    def perform_destroy(self, instance):
-        instance.is_active = False
-        instance.save()
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return ToDOModelSerializer_new
+        return ToDOModelSerializer
 
-class FilterToDO(ListAPIView):
-    serializer_class = ToDOModelSerializer
-
-    def get_queryset(self):
-       name = self.kwargs['name']
-       return ToDO.objects.filter(name__contains=name)
+   
+    def destroy(self, request, pk=None):
+        try:
+            instance = self.get_object()
+            instance.is_active = False
+            instance.save()
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)

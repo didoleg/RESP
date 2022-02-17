@@ -15,5 +15,5 @@ class ToDO(models.Model):
     text = models.TextField()
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now_add=True)
-    user_create = models.ForeignKey(User, on_delete=models.PROTECT)
+    creator = models.ForeignKey(User, on_delete=models.PROTECT)
     is_active = models.BooleanField(default=True)

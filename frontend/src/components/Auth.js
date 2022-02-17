@@ -15,19 +15,30 @@ class LoginForm extends React.Component {
                 }
             );  
     }
-
     handleSubmit(event) {
-      this.props.get_token(this.state.login, this.state.password)  
+      this.props.login(this.state.login, this.state.password)
       event.preventDefault()
     }
   
     render() {
       return (
         <form onSubmit={(event)=> this.handleSubmit(event)}>
-            <input type="text" name="login" placeholder="login" value={this.state.login} onChange={(event)=>this.handleChange(event)} />        
-            <input type="password" name="password" placeholder="password" value={this.state.password} onChange={(event)=>this.handleChange(event)} />        
-            <input type="submit" value="Login" />
+            <div className="form-group">
+            <label for="login">login</label>
+                <input type="text" className="form-control" name="login" value={this.state.login} onChange={(event)=>this.handleChange(event)} />        
+            </div>
+          
+        <div className="form-group">
+            <label for="password">password</label>
+            
+            <input type="password" className="form-control" name="password" value={this.state.password} onChange={(event)=>this.handleChange(event)} />        
+
+          
+          </div>
+          <input type="submit" className="btn btn-primary" value="Login" />
         </form>
+            
+        
       );
     }
   }

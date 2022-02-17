@@ -4,7 +4,7 @@ import React from 'react'
 class ProjectForm extends React.Component {
     constructor(props) {
       super(props)
-      this.state = {name: '', repository: 0}
+      this.state = {name: '', repository: ''}
     }
   
     handleChange(event) 
@@ -15,10 +15,8 @@ class ProjectForm extends React.Component {
                 }
             );  
     }
-
     handleSubmit(event) {
-      console.log(this.state.name)
-      console.log(this.state.repository)
+      this.props.save(this.state.name, this.state.repository)
       event.preventDefault()
     }
   
@@ -31,17 +29,18 @@ class ProjectForm extends React.Component {
             </div>
           
         <div className="form-group">
-            <label for="name">name</label>
+            <label for="password">repository</label>
             
-            <input type="number" className="form-control" name="repository" value={this.state.repository} onChange={(event)=>this.handleChange(event)} />        
+            <input type="text" className="form-control" name="repository" value={this.state.repository} onChange={(event)=>this.handleChange(event)} />        
 
           
           </div>
           <input type="submit" className="btn btn-primary" value="Save" />
         </form>
+            
+        
       );
     }
   }
 
   export default ProjectForm
-

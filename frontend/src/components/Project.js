@@ -1,20 +1,26 @@
 import React from 'react'
-import {Link, useParams} from "react-router-dom";
+import {
+  Link,
+  useParams
+} from "react-router-dom";
 
 
-const ProjectListItem = ({item}) => {
+const ProjectListItem = ({item, deleteFunction}) => {
+    let link_to_detail = `/project/${item.id}`
     return (
         <tr>
             <td>{item.id}</td>
             <td>{item.name}</td>
             <td>{item.repository}</td>
-            <td>{item.users}</td>
-            <td><button onClick={()=>delete_Project(item.id)} type='button'>Delete</button></td>
+            <td><Link to={link_to_detail}>Detail</Link></td>
+            <td>Update</td>
+            <td><button className='btn btn-danger' onClick={()=>deleteFunction(item.id)}>Delete</button></td>
         </tr>
     )
 }
 
-const ProjectList = ({items, delete_Project}) => {
+const ProjectList = ({items, deleteFunction}) => {
+    //console.log(users)
     return (
         <div>
         <table className="table">
@@ -22,14 +28,14 @@ const ProjectList = ({items, delete_Project}) => {
                 <th>Id</th>
                 <th>Name</th>
                 <th>Repository</th>
-                <th>User Add</th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
-            {items.map((item) => <ProjectListItem item={item} delete_Project={delete_Project}/>)}
+            {items.map((item) => <ProjectListItem item={item} deleteFunction={deleteFunction} />)}
         </table>
-        <Link to='/Project/create'>Create</Link>
+        <Link to='/project/create' className='btn btn-primary'>Create</Link>
         </div>
-            
-        
     )
 }
 
