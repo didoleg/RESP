@@ -3,13 +3,12 @@ import {Link, useParams} from "react-router-dom";
 
 
 const ProjectListItem = ({item}) => {
-    let link_to = `/project/${item.id}`
     return (
         <tr>
             <td>{item.id}</td>
             <td>{item.name}</td>
             <td>{item.repository}</td>
-            <td><Link to={link_to}>Detail</Link></td>
+            <td>{item.users}</td>
         </tr>
     )
 }
@@ -21,7 +20,7 @@ const ProjectList = ({items}) => {
                 <th>Id</th>
                 <th>Name</th>
                 <th>Repository</th>
-                <th></th>
+                <th>User Add</th>
             </tr>
             {items.map((item) => <ProjectListItem item={item} />)}
         </table>

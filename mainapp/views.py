@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.renderers import JSONRenderer
+from rest_framework import permissions
 from users.models import User
 from todoapp.models import Project, ToDO
 from rest_framework.response import Response
@@ -17,7 +18,8 @@ class ToDoLimitOffsetPagination(LimitOffsetPagination):
 class UserMyViewSet(ViewSet):
     render_classes = [JSONRenderer]
     serializer_class = UserModelSerializer
-    
+    queryset = User.objects.all()
+        
     def list(self, request):
         users = User.objects.all()
         serializer = UserModelSerializer(users, many=True)
@@ -43,6 +45,7 @@ class UserMyViewSet(ViewSet):
 
 
 class ProjectMyViewSet(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     render_classes = [JSONRenderer]
     pagination_class = ProjectLimitOffsetPagination
     serializer_class = ProjectModelSerializer
@@ -59,7 +62,7 @@ class FilterProject(ListAPIView):
 
 class ToDOViewSet(ModelViewSet):
     serializer_class = ToDOModelSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticated]
     queryset = ToDO.objects.all()
 
     def perform_destroy(self, instance):
